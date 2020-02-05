@@ -65,7 +65,6 @@ bool ShouldDeleteFile(const std::wstring& extention)
      L".la",
      L".lai",
      L".lastbuildstate",
-     L".lib",
      L".lo",
      L".log",
      L".map",
