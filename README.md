@@ -1,5 +1,5 @@
 # Why This Exist
-When you have 10 Projects and you often manually back up them on your local drives. You also copy Visual Studio Generated build files. Which they take up %95 of the total project file size. This exe cleans those files at once on multiple projects in seconds. So you can backup faster & and without worrying space
+When you have 10 Projects and you often manually back up them on your local drives. You also copy Visual Studio Generated build files. Which they take up %95 of the total project file size. This exe cleans those files at once on multiple projects in seconds. So you can backup faster & and without worrying about space
 
 #  Compile Requirements
 
@@ -13,7 +13,7 @@ Boost Lib 1.72 x86
 
 # How To Run
 
-Just Run by double simple double click and
+Just Run by simple double click and
 It will clean all projects in folders and subfolders in Working Directory of .exe
 ![](https://i.gyazo.com/aa1fc1a67253a8ef2564013ec950bfd8.png)
 
