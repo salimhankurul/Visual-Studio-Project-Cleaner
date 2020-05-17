@@ -15,7 +15,9 @@ using namespace boost::filesystem;
 
 
 std::vector<boost::filesystem::path> FilesToDelete;
-std::uint64_t TotalFileSize = 0;
+std::uint32_t TotalFileSize = 0;
+std::uint32_t TotalAmountOfFolderFound = 0;
+std::uint32_t TotalAmountOfFilesFound = 0;
 
 std::wstring GetWorkingDirectory()
 {
@@ -57,7 +59,7 @@ bool ShouldDeleteFile(const std::wstring& extention)
      L".app",
      L".d",
      L".db",
-     L".dylib",
+     //L".dylib",
      L".gnc",
      L".iobj",
      L".ipch",
@@ -111,9 +113,11 @@ void ReadFolder(const std::wstring& dirName)
         {       
             // Handle Folder
             ReadFolder(p.path().c_str());  
+            TotalAmountOfFolderFound++;
         }      
         else
         {
+            TotalAmountOfFilesFound++;
             // Handle File
             if (ShouldDeleteFile(p.path().extension().c_str()))
             {
@@ -126,18 +130,49 @@ void ReadFolder(const std::wstring& dirName)
 
 }
 
+void PrintWFormat(const wchar_t* format, ...)
+{
+    va_list argptr;
+    va_start(argptr, format);
+
+    vwprintf(format, argptr);
+
+    va_end(argptr);
+}
+
+bool Loading = false;
+using namespace std::chrono_literals;
+
+void LoadingThread()
+{
+    while (Loading)
+    {    
+        std::cout << "\rScanned... " << TotalAmountOfFilesFound << " file(s) in " << TotalAmountOfFolderFound << " folder(s)" << std::flush;      
+        std::this_thread::sleep_for(100ms);
+    }   
+}
+
 
 int main(int argc, char* argv[])
 {
    
     PrintW(L"*** Welcome To Darkpassanger123 Visual Studio Project Cleaner *** \n\n");
 
+  
     if (argc < 2)
     {
         PrintW(L"Itterating through working directory folder and all of its subfolders. \n");
-        PrintW(L"Working Directory:\n%s \n\n", GetWorkingDirectory());
+        PrintW(L"Working Directory:\n%s \n\nPlease Wait...Working...\n\n", GetWorkingDirectory());
+
+        Loading = true;
+
+        std::thread s(LoadingThread);
+        s.detach();
 
         ReadFolder(GetWorkingDirectory());
+
+        Loading = false;
+
     }
     else if (argc == 2)
     {
@@ -165,9 +200,8 @@ int main(int argc, char* argv[])
         return 0;
     }
 
- 
-    PrintW(L"Total Of: %i target file found \n", FilesToDelete.size());
-    PrintW(L"Total Size Of Files: [%i/mb] \n", TotalFileSize / 1024 / 1024);
+    PrintW(L"\n\n");
+    PrintWFormat(L"%u file(s) will be deleted.\nTotal Cleaning Size Of Files: [%u/mb] \n", FilesToDelete.size(),TotalFileSize / 1024 / 1024);
 
     std::wstring Option;
   
